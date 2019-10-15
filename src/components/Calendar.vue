@@ -7,15 +7,15 @@
                     {{ weekdayNames[currentDay] }}
                 </div>
                 <div class="today">
-                    <div><div class="arrow-up"></div></div>
-                    <div><div class="arrow-up"></div></div>
-                    <div><div class="arrow-up"></div></div>
+                    <div><div class="arrow-up" @click="dateUp()"></div></div>
+                    <div><div class="arrow-up" @click="monthUp()"></div></div>
+                    <div><div class="arrow-up" @click="currentDate.year += 1"></div></div>
                     <div>{{ currentDate.date }}</div>
                     <div>{{ month[currentDate.month] }}</div>
                     <div>{{ currentDate.year }}</div>
-                    <div><div class="arrow-down"></div></div>
-                    <div><div class="arrow-down"></div></div>
-                    <div><div class="arrow-down"></div></div>
+                    <div><div class="arrow-down" @click="dateDown()"></div></div>
+                    <div><div class="arrow-down" @click="monthDown()"></div></div>
+                    <div><div class="arrow-down" @click="currentDate.year -= 1"></div></div>
                 </div>
             </div>
         </header>
@@ -31,6 +31,7 @@
                 </div>
                 <div class="day" 
                         :class="{ active: n === currentDate.date}"
+                        @click="currentDate.date = n"
                         v-for="(n, index) in currentMonthDays" 
                         :key="'day'+index" >
                     {{ n }}
@@ -84,6 +85,42 @@ export default {
             this.currentDate.date = today.getDate();
             this.currentDate.month = today.getMonth();
             this.currentDate.year = today.getFullYear();
+        },
+        dateUp() {
+            if(this.currentDate.date === this.currentMonthDays) {
+                this.currentDate.date = 1;
+                this.monthUp();
+            }
+            else {
+                this.currentDate.date += 1;
+            }    
+        },
+        dateDown() {
+            if(this.currentDate.date === 1) {
+                this.currentDate.date = this.prevMonthDays;
+                this.monthDown;
+            }
+            else {
+                this.currentDate.date -= 1;
+            }
+        },
+        monthUp() {
+            if(this.currentDate.month === 11) {
+                this.currentDate.month = 0;
+                this.currentDate.year +=1;
+            }
+            else {
+                this.currentDate.month += 1;
+            }           
+        },
+        monthDown() {
+            if(this.currentDate.month === 0) {
+                this.currentDate.month = 11;
+                this.currentDate.year -= 1;
+            }
+            else {
+               this.currentDate.month -= 1; 
+            }
         }
     },
     created() {
