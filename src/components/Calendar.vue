@@ -58,5 +58,6 @@ export default {
         font-family: 'Anton';
         border-radius: 15px;
         overflow: hidden;
+        background: url('C:\Users\eight\Desktop\TutoVueJs\webNoobTuto\Calendar\calendar\src\assets\calendar\8.jpg') center center;
     }
 </style>
