@@ -1,17 +1,18 @@
 <template>
-    <article id="calendar">
+    <article id="calendar"
+    :style="{'background-image': 'url('+ require('../assets/calendar/'+currentDate.month+'.jpg') +')'}">
         <header>
             <div class="current-date">
                 <div class="current-day">
-                    Saturday
+                    {{ weekdayNames[currentDay] }}
                 </div>
                 <div class="today">
                     <div><div class="arrow-up"></div></div>
                     <div><div class="arrow-up"></div></div>
                     <div><div class="arrow-up"></div></div>
-                    <div>10</div>
-                    <div>August</div>
-                    <div>2019</div>
+                    <div>{{ currentDate.date }}</div>
+                    <div>{{ month[currentDate.month] }}</div>
+                    <div>{{ currentDate.year }}</div>
                     <div><div class="arrow-down"></div></div>
                     <div><div class="arrow-down"></div></div>
                     <div><div class="arrow-down"></div></div>
@@ -25,13 +26,16 @@
                 </div>
             </div>
             <div class="date">
-                <div class="day-hidden">29</div>
-                <div class="day-hidden">30</div>
-                <div class="day-hidden">31</div>
-                <div class="day" v-for="(n, index) in 31" :key="index" >
+                <div class="day-hidden" v-for="(n, index) in (firstMonthDay -1)" :key="'prev'+index" >
+                    {{ (prevMonthDays +1) - firstMonthDay + n }}
+                </div>
+                <div class="day" 
+                        :class="{ active: n === currentDate.date}"
+                        v-for="(n, index) in currentMonthDays" 
+                        :key="'day'+index" >
                     {{ n }}
                 </div>
-                <div class="day-hidden" v-for="(n, index) in 8" :key="index" >
+                <div class="day-hidden" v-for="(n, index) in (43 - (currentMonthDays + firstMonthDay))" :key="'next'+index" >
                     {{ n }}
                 </div>
             </div>
@@ -55,6 +59,35 @@ export default {
                 year: 0
             }
         }
+    },
+    computed: {
+        prevMonthDays() {
+            let year = this.currentDate.month === 0 ? this.currentDate.year - 1 : this.currentDate.year;
+            let month = this.currentDate.month === 0 ? 11 : this.currentDate.month;
+            return new Date(year, month, 0).getDate();
+        },
+        firstMonthDay() {
+            let firstDay = new Date(this.currentDate.year, this.currentDate.month, 1).getDay();
+            if (firstDay === 0) firstDay = 7;
+            return firstDay;
+        },
+        currentDay() {
+            return new Date(this.currentDate.year, this.currentDate.month, this.currentDate.date).getDay();
+        },
+        currentMonthDays() {
+            return new Date(this.currentDate.year, this.currentDate.month +1, 0).getDate();
+        }
+    },
+    methods: {
+        getCurrentDate() {
+            let today = new Date();
+            this.currentDate.date = today.getDate();
+            this.currentDate.month = today.getMonth();
+            this.currentDate.year = today.getFullYear();
+        }
+    },
+    created() {
+        this.getCurrentDate();
     }
 }
 </script>
